@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.ui.reader.viewer
 
+import android.util.Log
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -30,6 +31,8 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
 
     var navigationOverlayOnStart = false
 
+    var imageScalingAlgorithm = ReaderPreferences.ImageScalingAlgorithm.BILINEAR
+
     var dualPageSplit = false
         protected set
 
@@ -44,6 +47,7 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
 
     abstract var navigator: ViewerNavigation
         protected set
+
 
     init {
         readerPreferences.readWithLongTap()
@@ -64,11 +68,13 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
         readerPreferences.alwaysShowChapterTransition()
             .register({ alwaysShowChapterTransition = it })
 
+        readerPreferences.imageScalingAlgorithm()
+            .register({ imageScalingAlgorithm = it }, { imagePropertyChangedListener?.invoke() })
+
         forceNavigationOverlay = readerPreferences.showNavigationOverlayNewUser().get()
         if (forceNavigationOverlay) {
             readerPreferences.showNavigationOverlayNewUser().set(false)
         }
-
         readerPreferences.showNavigationOverlayOnStart()
             .register({ navigationOverlayOnStart = it })
     }

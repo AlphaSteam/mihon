@@ -246,6 +246,15 @@ object SettingsReaderScreen : SearchableSettings {
                     title = stringResource(MR.strings.pref_image_scale_type),
                 ),
                 Preference.PreferenceItem.ListPreference(
+                    preference = readerPreferences.imageScalingAlgorithm(),
+                    entries = persistentListOf(
+                    ReaderPreferences.ImageScalingAlgorithm.NEAREST_NEIGHBOR,
+                        ReaderPreferences.ImageScalingAlgorithm.BILINEAR,
+                        ).associateWith { stringResource(it.titleRes) }
+                        .toImmutableMap(),
+                    title = stringResource(MR.strings.pref_image_scaling_algorithm),
+                ),
+                Preference.PreferenceItem.ListPreference(
                     preference = readerPreferences.zoomStart(),
                     entries = ReaderPreferences.ZoomStart
                         .mapIndexed { index, it -> index + 1 to stringResource(it) }

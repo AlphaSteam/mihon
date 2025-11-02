@@ -170,6 +170,7 @@ class PagerPageHolder(
                         cropBorders = viewer.config.imageCropBorders,
                         zoomStartPosition = viewer.config.imageZoomType,
                         landscapeZoom = viewer.config.landscapeZoom,
+                        imageScalingAlgorithm = viewer.config.imageScalingAlgorithm,
                     ),
                 )
                 if (!isAnimated) {

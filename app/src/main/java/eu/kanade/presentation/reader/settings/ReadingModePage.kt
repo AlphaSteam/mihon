@@ -83,6 +83,17 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
         }
     }
 
+    val imageScalingAlgorithm by screenModel.preferences.imageScalingAlgorithm().collectAsState()
+    SettingsChipRow(MR.strings.pref_image_scaling_algorithm) {
+        ReaderPreferences.ImageScalingAlgorithm.entries.map {
+            FilterChip(
+                selected = imageScalingAlgorithm == it,
+                onClick = { screenModel.preferences.imageScalingAlgorithm().set(it) },
+                label = { Text(stringResource(it.titleRes)) },
+            )
+        }
+    }
+
     val zoomStart by screenModel.preferences.zoomStart().collectAsState()
     SettingsChipRow(MR.strings.pref_zoom_start) {
         ReaderPreferences.ZoomStart.mapIndexed { index, it ->

@@ -49,6 +49,8 @@ class ReaderPreferences(
 
     fun imageScaleType() = preferenceStore.getInt("pref_image_scale_type_key", 1)
 
+    fun imageScalingAlgorithm() = preferenceStore.getEnum("pref_image_scaling_algorithm", ImageScalingAlgorithm.BILINEAR)
+
     fun zoomStart() = preferenceStore.getInt("pref_zoom_start_key", 1)
 
     fun readerTheme() = preferenceStore.getInt("pref_reader_theme_key", 1)
@@ -156,6 +158,20 @@ class ReaderPreferences(
         BOTH(MR.strings.tapping_inverted_both, shouldInvertHorizontal = true, shouldInvertVertical = true),
     }
 
+    enum class ImageScalingAlgorithm(val titleRes: StringResource, val code: Int){
+        NEAREST_NEIGHBOR(MR.strings.image_scaling_nearest, code= 0),
+        BILINEAR(MR.strings.image_scaling_bilinear, code = 1);
+
+        companion object {
+            private val codeMap = ImageScalingAlgorithm.entries.associateBy { it.code }
+            @JvmStatic
+            fun fromCode(code: Int): ImageScalingAlgorithm? = codeMap[code]
+
+            @JvmStatic
+            fun isValidCode(code: Int): Boolean = code in codeMap
+        }
+    }
+
     enum class ReaderHideThreshold(val threshold: Int) {
         HIGHEST(5),
         HIGH(13),
@@ -193,6 +209,8 @@ class ReaderPreferences(
             MR.strings.zoom_start_right,
             MR.strings.zoom_start_center,
         )
+
+
 
         val ColorFilterMode = buildList {
             addAll(

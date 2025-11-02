@@ -51,3 +51,19 @@ include(":presentation-widget")
 include(":source-api")
 include(":source-local")
 include(":telemetry")
+
+
+
+includeBuild(file("../subsampling-scale-image-view")) {
+    dependencySubstitution {
+        substitute(module("com.github.tachiyomiorg:subsampling-scale-image-view"))
+            .using(project(":library"))
+    }
+}
+
+includeBuild(file("../image-decoder")) {
+    dependencySubstitution {
+        substitute(module("com.github.tachiyomiorg:image-decoder"))
+            .using(project(":library"))
+    }
+}

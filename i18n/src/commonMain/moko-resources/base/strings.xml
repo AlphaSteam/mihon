@@ -467,6 +467,9 @@
     <string name="pref_navigate_pan">Pan wide images</string>
     <string name="pref_landscape_zoom">Automatically zoom into wide images</string>
     <string name="pref_zoom_start">Zoom start position</string>
+    <string name="pref_image_scaling_algorithm">Scaling algorithm</string>
+    <string name="image_scaling_bilinear">Bilinear</string>
+    <string name="image_scaling_nearest">Nearest</string>
     <string name="zoom_start_automatic">Automatic</string>
     <string name="zoom_start_left">Left</string>
     <string name="zoom_start_right">Right</string>

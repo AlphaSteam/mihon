@@ -36,6 +36,7 @@ import com.github.chrisbanes.photoview.PhotoView
 import eu.kanade.domain.base.BasePreferences
 import eu.kanade.tachiyomi.data.coil.cropBorders
 import eu.kanade.tachiyomi.data.coil.customDecoder
+import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonSubsamplingImageView
 import eu.kanade.tachiyomi.util.system.animatorDurationScale
 import eu.kanade.tachiyomi.util.view.isVisibleOnScreen
@@ -43,11 +44,13 @@ import okio.BufferedSource
 import tachiyomi.core.common.util.system.ImageUtil
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
+import android.util.Log
+import com.davemorrissey.labs.subscaleview.ScalingAlgorithm
 
 /**
  * A wrapper view for showing page image.
  *
- * Animated image will be drawn by [PhotoView] while [SubsamplingScaleImageView] will take non-animated image.
+* Animated image will be drawn by [PhotoView] while [SubsamplingScaleImageView] will take non-animated image.
  *
  * @param isWebtoon if true, [WebtoonSubsamplingImageView] will be used instead of [SubsamplingScaleImageView]
  * and [AppCompatImageView] will be used instead of [PhotoView]
@@ -98,6 +101,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     open fun onViewClicked() {
         onViewClicked?.invoke()
     }
+
 
     open fun onPageSelected(forward: Boolean) {
         with(pageView as? SubsamplingScaleImageView) {
@@ -244,6 +248,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
             setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
             setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
             setMinimumTileDpi(180)
+            setScalingAlgorithm(config?.imageScalingAlgorithm?.code ?: ScalingAlgorithm.BILINEAR.code)
             setOnStateChangedListener(
                 object : SubsamplingScaleImageView.OnStateChangedListener {
                     override fun onScaleChanged(newScale: Float, origin: Int) {
@@ -294,6 +299,18 @@ open class ReaderPageImageView @JvmOverloads constructor(
                 }
             },
         )
+        setOnScalingAlgorithmChangedListener(
+            object : SubsamplingScaleImageView.DefaultOnScalingAlgorithmChangedListener() {
+                override fun onScalingAlgorithmChanged(newKernelOrdinal: Int) {
+                    val algoTitle = ReaderPreferences.ImageScalingAlgorithm.fromCode(newKernelOrdinal)?.titleRes
+                    Log.d("ReaderPageImageView", "onScalingAlgorithmChanged: $algoTitle")
+                }
+            },
+        )
+
+        val code = config.imageScalingAlgorithm.code;
+
+        Log.d("RenderPageImageView", "$code");
 
         when (data) {
             is BitmapDrawable -> {
@@ -421,6 +438,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         val cropBorders: Boolean = false,
         val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
         val landscapeZoom: Boolean = false,
+        val imageScalingAlgorithm: ReaderPreferences.ImageScalingAlgorithm = ReaderPreferences.ImageScalingAlgorithm.BILINEAR,
     )
 
     enum class ZoomStartPosition {
