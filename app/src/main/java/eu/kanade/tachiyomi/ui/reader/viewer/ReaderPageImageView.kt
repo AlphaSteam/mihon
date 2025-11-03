@@ -75,6 +75,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
     var onImageLoadError: ((Throwable?) -> Unit)? = null
     var onScaleChanged: ((newScale: Float) -> Unit)? = null
     var onViewClicked: (() -> Unit)? = null
+    var onScalingAlgorithmChanged: ((algorithm: ScalingAlgorithm) -> Unit)? = null
 
     /**
      * For automatic background. Will be set as background color when [onImageLoaded] is called.
@@ -95,6 +96,11 @@ open class ReaderPageImageView @JvmOverloads constructor(
     @CallSuper
     open fun onScaleChanged(newScale: Float) {
         onScaleChanged?.invoke(newScale)
+    }
+
+    @CallSuper
+    open fun onScalingAlgorithmChanged(newAlgorithm: ScalingAlgorithm) {
+        onScalingAlgorithmChanged?.invoke(newAlgorithm)
     }
 
     @CallSuper
@@ -248,7 +254,6 @@ open class ReaderPageImageView @JvmOverloads constructor(
             setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
             setPanLimit(SubsamplingScaleImageView.PAN_LIMIT_INSIDE)
             setMinimumTileDpi(180)
-            setScalingAlgorithm(config?.imageScalingAlgorithm?.code ?: ScalingAlgorithm.BILINEAR.code)
             setOnStateChangedListener(
                 object : SubsamplingScaleImageView.OnStateChangedListener {
                     override fun onScaleChanged(newScale: Float, origin: Int) {
@@ -301,16 +306,12 @@ open class ReaderPageImageView @JvmOverloads constructor(
         )
         setOnScalingAlgorithmChangedListener(
             object : SubsamplingScaleImageView.DefaultOnScalingAlgorithmChangedListener() {
-                override fun onScalingAlgorithmChanged(newKernelOrdinal: Int) {
-                    val algoTitle = ReaderPreferences.ImageScalingAlgorithm.fromCode(newKernelOrdinal)?.titleRes
-                    Log.d("ReaderPageImageView", "onScalingAlgorithmChanged: $algoTitle")
+                override fun onScalingAlgorithmChanged(newAlgorithm: ScalingAlgorithm) {
+                    this@ReaderPageImageView.onScalingAlgorithmChanged(newAlgorithm)
                 }
             },
         )
-
-        val code = config.imageScalingAlgorithm.code;
-
-        Log.d("RenderPageImageView", "$code");
+        setScalingAlgorithm(config.imageScalingAlgorithm.code)
 
         when (data) {
             is BitmapDrawable -> {
