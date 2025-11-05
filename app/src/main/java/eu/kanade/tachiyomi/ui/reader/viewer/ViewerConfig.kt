@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import tachiyomi.core.common.preference.Preference
+import tachiyomi.decoder.ScalingAlgorithm
 
 /**
  * Common configuration for all viewers.
@@ -31,7 +32,7 @@ abstract class ViewerConfig(readerPreferences: ReaderPreferences, private val sc
 
     var navigationOverlayOnStart = false
 
-    var imageScalingAlgorithm = ReaderPreferences.ImageScalingAlgorithm.BILINEAR
+    var imageScalingAlgorithm = ScalingAlgorithm.DEFAULT
 
     var dualPageSplit = false
         protected set

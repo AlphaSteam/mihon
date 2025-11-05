@@ -45,7 +45,7 @@ import tachiyomi.core.common.util.system.ImageUtil
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
 import android.util.Log
-import com.davemorrissey.labs.subscaleview.ScalingAlgorithm
+import tachiyomi.decoder.ScalingAlgorithm
 
 /**
  * A wrapper view for showing page image.
@@ -439,7 +439,7 @@ open class ReaderPageImageView @JvmOverloads constructor(
         val cropBorders: Boolean = false,
         val zoomStartPosition: ZoomStartPosition = ZoomStartPosition.CENTER,
         val landscapeZoom: Boolean = false,
-        val imageScalingAlgorithm: ReaderPreferences.ImageScalingAlgorithm = ReaderPreferences.ImageScalingAlgorithm.BILINEAR,
+        val imageScalingAlgorithm: ScalingAlgorithm = ScalingAlgorithm.DEFAULT
     )
 
     enum class ZoomStartPosition {

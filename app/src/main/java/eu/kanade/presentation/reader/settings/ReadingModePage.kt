@@ -14,7 +14,9 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReaderOrientation
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderPreferences
 import eu.kanade.tachiyomi.ui.reader.setting.ReaderSettingsScreenModel
 import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
+import eu.kanade.tachiyomi.ui.reader.setting.titleRes
 import eu.kanade.tachiyomi.ui.reader.viewer.webtoon.WebtoonViewer
+import tachiyomi.decoder.ScalingAlgorithm
 import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.CheckboxItem
 import tachiyomi.presentation.core.components.HeadingItem
@@ -85,7 +87,7 @@ private fun ColumnScope.PagerViewerSettings(screenModel: ReaderSettingsScreenMod
 
     val imageScalingAlgorithm by screenModel.preferences.imageScalingAlgorithm().collectAsState()
     SettingsChipRow(MR.strings.pref_image_scaling_algorithm) {
-        ReaderPreferences.ImageScalingAlgorithm.entries.map {
+        ScalingAlgorithm.entries.map {
             FilterChip(
                 selected = imageScalingAlgorithm == it,
                 onClick = { screenModel.preferences.imageScalingAlgorithm().set(it) },

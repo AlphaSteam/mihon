@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.BlendMode
 import dev.icerock.moko.resources.StringResource
 import tachiyomi.core.common.preference.PreferenceStore
 import tachiyomi.core.common.preference.getEnum
+import tachiyomi.decoder.ScalingAlgorithm
 import tachiyomi.i18n.MR
 
 class ReaderPreferences(
@@ -49,7 +50,7 @@ class ReaderPreferences(
 
     fun imageScaleType() = preferenceStore.getInt("pref_image_scale_type_key", 1)
 
-    fun imageScalingAlgorithm() = preferenceStore.getEnum("pref_image_scaling_algorithm", ImageScalingAlgorithm.BILINEAR)
+    fun imageScalingAlgorithm() = preferenceStore.getEnum("pref_image_scaling_algorithm", ScalingAlgorithm.DEFAULT)
 
     fun zoomStart() = preferenceStore.getInt("pref_zoom_start_key", 1)
 
@@ -158,19 +159,7 @@ class ReaderPreferences(
         BOTH(MR.strings.tapping_inverted_both, shouldInvertHorizontal = true, shouldInvertVertical = true),
     }
 
-    enum class ImageScalingAlgorithm(val titleRes: StringResource, val code: Int){
-        NEAREST_NEIGHBOR(MR.strings.image_scaling_nearest, code= 0),
-        BILINEAR(MR.strings.image_scaling_bilinear, code = 1);
 
-        companion object {
-            private val codeMap = ImageScalingAlgorithm.entries.associateBy { it.code }
-            @JvmStatic
-            fun fromCode(code: Int): ImageScalingAlgorithm? = codeMap[code]
-
-            @JvmStatic
-            fun isValidCode(code: Int): Boolean = code in codeMap
-        }
-    }
 
     enum class ReaderHideThreshold(val threshold: Int) {
         HIGHEST(5),
@@ -232,3 +221,11 @@ class ReaderPreferences(
         }
     }
 }
+
+// Make the mapping from shared ScalingAlgorithm to a localized title resource available
+// at top-level so it can be used from UI code (e.g. SettingsReaderScreen).
+val tachiyomi.decoder.ScalingAlgorithm.titleRes: StringResource
+    get() = when (this) {
+        tachiyomi.decoder.ScalingAlgorithm.NEAREST_NEIGHBOR -> MR.strings.image_scaling_nearest
+        tachiyomi.decoder.ScalingAlgorithm.BILINEAR -> MR.strings.image_scaling_bilinear
+    }

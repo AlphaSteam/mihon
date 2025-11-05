@@ -13,7 +13,9 @@ import eu.kanade.tachiyomi.ui.reader.setting.ReadingMode
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableMap
+import tachiyomi.decoder.ScalingAlgorithm
 import tachiyomi.i18n.MR
+import eu.kanade.tachiyomi.ui.reader.setting.titleRes
 import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.collectAsState
@@ -248,8 +250,8 @@ object SettingsReaderScreen : SearchableSettings {
                 Preference.PreferenceItem.ListPreference(
                     preference = readerPreferences.imageScalingAlgorithm(),
                     entries = persistentListOf(
-                    ReaderPreferences.ImageScalingAlgorithm.NEAREST_NEIGHBOR,
-                        ReaderPreferences.ImageScalingAlgorithm.BILINEAR,
+                        ScalingAlgorithm.NEAREST_NEIGHBOR,
+                        ScalingAlgorithm.BILINEAR,
                         ).associateWith { stringResource(it.titleRes) }
                         .toImmutableMap(),
                     title = stringResource(MR.strings.pref_image_scaling_algorithm),

@@ -1,6 +1,7 @@
 package eu.kanade.tachiyomi.data.coil
 
 import android.graphics.Bitmap
+import android.util.Log
 import coil3.ImageLoader
 import coil3.asImage
 import coil3.decode.DecodeResult
@@ -21,7 +22,11 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
 
     override suspend fun decode(): DecodeResult {
         val decoder = resources.sourceOrNull()?.use {
-            ImageDecoder.newInstance(it.inputStream(), options.cropBorders, displayProfile)
+            ImageDecoder.newInstance(
+                it.inputStream(),
+                options.cropBorders,
+                displayProfile,
+            )
         }
 
         check(decoder != null && decoder.width > 0 && decoder.height > 0) { "Failed to initialize decoder" }
@@ -39,6 +44,8 @@ class TachiyomiImageDecoder(private val resources: ImageSource, private val opti
             dstHeight = dstHeight,
             scale = options.scale,
         )
+
+        Log.d("TachiyomiImageDecoder", sampleSize.toString());
 
         var bitmap = decoder.decode(sampleSize = sampleSize)
         decoder.recycle()
